@@ -16,6 +16,13 @@
 
 
 (def itmejp-api "http://itmejp.com/api/events/")
+(def cache-hours 1)
+
+(def ghetto-cache (atom {
+  :data nil
+  :expire nil
+}))
+
 
 (defn start-date-time [event]
   (t/from-time-zone (f/parse (event "event_dt_start")) (t/time-zone-for-id (event "event_dt_timezone"))))
@@ -43,12 +50,21 @@
     (doseq [event (events)] (.addEvent cal (calendar-event event)))
     (-> (into-array ICalendar [cal]) Biweekly/write .go)))
 
+(defn cached [cache f]
+  (when (not (t/before? (t/now) (:expire @cache)))
+    (do
+      (println "Need to update the cache")
+      (reset! cache {
+            :data (f)
+            :expire (t/plus (t/now) (t/hours cache-hours))})))
+  (:data @cache))
+
 (defroutes app
   (GET "/" []
     {:status 200
-     ; :headers {"Content-Type" "text/plain"}
-     :headers {"Content-Type" "text/calendar"}
-     :body (calendar)})
+     :headers {"Content-Type" "text/plain"}
+     ; :headers {"Content-Type" "text/calendar"}
+     :body (cached ghetto-cache calendar)})
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
@@ -58,4 +74,4 @@
 
 ;; For interactive development:
 ; (.stop server)
-; (def server (-main))
+(def server (-main))
