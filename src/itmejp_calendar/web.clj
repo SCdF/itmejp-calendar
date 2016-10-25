@@ -62,8 +62,8 @@
 (defroutes app
   (GET "/" []
     {:status 200
-     :headers {"Content-Type" "text/plain"}
-     ; :headers {"Content-Type" "text/calendar"}
+     ; :headers {"Content-Type" "text/plain"}
+     :headers {"Content-Type" "text/calendar"}
      :body (cached ghetto-cache calendar)})
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
@@ -74,4 +74,4 @@
 
 ;; For interactive development:
 ; (.stop server)
-(def server (-main))
+; (def server (-main))
