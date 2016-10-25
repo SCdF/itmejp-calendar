@@ -18,7 +18,7 @@
 (def itmejp-api "http://itmejp.com/api/events/")
 
 (defn start-date-time [event]
-  (t/to-time-zone (f/parse (event "event_dt_start")) (t/time-zone-for-id (event "event_dt_timezone"))))
+  (t/from-time-zone (f/parse (event "event_dt_start")) (t/time-zone-for-id (event "event_dt_timezone"))))
 
 (defn end-date-time [event]
   (if (not (clojure.string/blank? (event "event_dt_end")))
