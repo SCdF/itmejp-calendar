@@ -1,10 +1,21 @@
-(ns clojure-getting-started.web
+(ns itmejp-calendar.web
   (:require [compojure.core :refer [defroutes GET PUT POST DELETE ANY]]
             [compojure.handler :refer [site]]
             [compojure.route :as route]
+            [clj-http.client :as client]
+            [clojure.data.json :as json]
             [clojure.java.io :as io]
             [ring.adapter.jetty :as jetty]
             [environ.core :refer [env]]))
+
+
+(def itmejp-api "http://itmejp.com/api/events-future/")
+
+(defn events [] (->>
+  itmejp-api
+  client/get
+  :body
+  json/read-str))
 
 (defn splash []
   {:status 200
@@ -13,7 +24,7 @@
 
 (defroutes app
   (GET "/" []
-       (splash))
+       (events)))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
