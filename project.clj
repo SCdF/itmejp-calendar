@@ -1,6 +1,6 @@
-(defproject clojure-getting-started "1.0.0-SNAPSHOT"
+(defproject itmejp-calendar "1.0.0-SNAPSHOT"
   :description "Generating itmeJP's calendar"
-  :url "http://clojure-getting-started.herokuapp.com"
+  :url "https://github.com/SCdF/itmejp-calendar"
   :license {:name "Eclipse Public License v1.0"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
